@@ -43,6 +43,8 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
-    }
+        "typeinfo": "cpp",
+        "stdio.h": "c"
+    },
+    "cmake.sourceDirectory": "/workspaces/10001/c"
 }
