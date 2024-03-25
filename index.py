@@ -74,7 +74,7 @@ async def quote(ctx):
 
 @bot.command()
 async def meme(ctx):
-    response = requests.get('')
+    response = requests.get('https://api.imgflip.com/get_memes')
     if response.status_code == 200:  # Success
         data = response.json()
         meme = random.choice(data['data']['memes'])
