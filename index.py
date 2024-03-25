@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import asyncio 
 import requests
+import random
+import string
 
 
 intents = discord.Intents.all()
@@ -70,17 +72,67 @@ async def quote(ctx):
     else:
         await ctx.send('Could not retrieve a quote at this time.')
 
-
-
 @bot.command()
 async def meme(ctx):
-    response = requests.get('https://meme-api.herokuapp.com/gimme')
+    response = requests.get('')
     if response.status_code == 200:  # Success
         data = response.json()
-        embed = discord.Embed(title=data['title'], color=discord.Color.blue())
-        embed.set_image(url=data['url'])
+        meme = random.choice(data['data']['memes'])
+        embed = discord.Embed(title=meme['name'], color=discord.Color.blue())
+        embed.set_image(url=meme['url'])
         await ctx.send(embed=embed)
     else:
         await ctx.send('Could not retrieve a meme at this time.')
-    
-bot.run("")
+
+
+
+@bot.command()
+async def text_to_image(ctx, *, text):
+    response = requests.post(
+        'https://api.deepai.org/api/text2img',
+        data={
+            'text': text,
+        },
+        headers={'df95b90c-089a-4388-93b6-3acc320498a7': 'quickstart-QUdJIGlzIGNvbWluZy4uLi4K'}
+    )
+    if response.status_code == 200:  # Success
+        data = response.json()
+        embed = discord.Embed(color=discord.Color.blue())
+        embed.set_image(url=data['output_url'])
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send('Could not generate an image at this time.')
+
+
+@bot.command()
+async def text_to_speech(ctx, *, text):
+    response = requests.get(
+        'http://api.voicerss.org/',
+        params={
+            'key': 'your_api_key',
+            'hl': 'en-us',
+            'src': text,
+            'f': '44khz_16bit_stereo',
+            'c': 'mp3'
+        }
+    )
+    if response.status_code == 200:  # Success
+        with open('speech.mp3', 'wb') as f:
+            f.write(response.content)
+        await ctx.send(file=discord.File('speech.mp3'))
+    else:
+        await ctx.send('Could not generate speech at this time.')
+import secrets
+
+
+@bot.tree.command(name="password", description="Generates a strong random password")
+async def password(interaction: discord.Interaction):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(secrets.choice(characters) for i in range(16))
+
+    await interaction.response.send_message(f"Your strong password is: {password}", ephemeral=True)
+    await bot.tree.sync()
+
+
+
+bot.run("your_bot_token")
