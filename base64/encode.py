@@ -9,7 +9,7 @@ def encode_lund_times(text, iterations=kitnebaarlunddu):
     return encoded_lund.decode('utf-8')
 
 
-lund = "kya lund encode krega lawde"
+lund = "kya lund decode krega lawde"
 
 # Encode 50 times
 encoded_lund = encode_lund_times(lund)
