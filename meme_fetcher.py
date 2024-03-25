@@ -1,6 +1,4 @@
 import requests
-import requests
-
 def fetch_memes(num_memes):
     url = "https://api.imgflip.com/get_memes"
     response = requests.get(url)
