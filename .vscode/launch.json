@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "type": "java",
+            "name": "MyBot",
+            "request": "launch",
+            "mainClass": "MyBot",
+            "projectName": "10001_770ee310"
+        },
         {
             "type": "cmake",
             "request": "launch",
@@ -119,6 +125,5 @@
                 }
             ]
         }
-
     ]
 }
