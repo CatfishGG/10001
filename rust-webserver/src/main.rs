@@ -42,3 +42,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 }
  
 // The above code is a simple example of a web server that listens on port 1337 nigga
+
+// Rust is Rusty fr
