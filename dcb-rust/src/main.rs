@@ -1,45 +1,37 @@
 use serenity::{
     async_trait,
-    client::Client,
-    framework::standard::{
-        macros::{command},
-        CommandResult, StandardFramework, 
-    },
-    model::channel::Message,
-    prelude::*,
+    client::{Client, Context, EventHandler},
+    model::{channel::Message, gateway::{Ready, GatewayIntents}},
 };
 
 struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn message(&self, context: Context, msg: Message) {
+    async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!ping" {
-            if let Err(why) = msg.channel_id.say(&context.http, "Pong!").await {
+            if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
                 println!("Error sending message: {:?}", why);
             }
         }
+    }
+
+    async fn ready(&self, _: Context, ready: Ready) {
+        println!("{} is connected!", ready.user.name);
     }
 }
 
 #[tokio::main]
 async fn main() {
-    let framework = StandardFramework::new()
-        .configure(|c| c.prefix("!")) 
-        .command("ping", |c| c.cmd(ping));
-
     let token = "your_discord_bot_token";
-    let mut client = Client::builder(token)
+    let intents = GatewayIntents::all();
+
+    let mut client = Client::builder(&token, intents)
         .event_handler(Handler)
-        .framework(framework)
         .await
         .expect("Error creating client");
 
-    client.start().await.expect("Error running client");
-}
-
-#[command]
-async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
-    msg.reply(ctx, "Pong!").await?;
-    Ok(())
+    if let Err(why) = client.start().await {
+        println!("Client error: {:?}", why);
+    }
 }
