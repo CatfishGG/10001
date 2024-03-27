@@ -11,6 +11,6 @@ client.on('interactionCreate', async interaction => {
   if (interaction.commandName === 'ping') {
     await interaction.reply('Pong!');
   }
-});
+}); 
 
 client.login(TOKEN);

@@ -1,3 +1,4 @@
+use std::env;
 use serenity::{
     async_trait,
     client::{Client, Context, EventHandler},
@@ -23,7 +24,7 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
-    let token = "your_discord_bot_token";
+    let token = env::("TOKEN").expect("Expected a token in the environment");
     let intents = GatewayIntents::all();
 
     let mut client = Client::builder(&token, intents)
@@ -35,3 +36,5 @@ async fn main() {
         println!("Client error: {:?}", why);
     }
 }
+
+
