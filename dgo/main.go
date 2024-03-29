@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	discord, err := discordgo.New("Bot " + os.Getenv("DISCORD_BOT_TOKEN"))
+	discord, err := discordgo.New("Bot " + os.Getenv("TOKEN"))
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
@@ -31,10 +31,24 @@ func main() {
 	discord.Close()
 }
 
+
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	fmt.Printf("Message: %+v\n", m.Message)
+	if m.Content == "bhej" {
+		file, err := os.Open("kali-linux.png")
+		if err != nil {
+			fmt.Println("error opening file,", err)
+			return
+		}
+		defer file.Close()
+
+		_, err = s.ChannelFileSend(m.ChannelID, "kali-linux.png", file)
+		if err != nil {
+			fmt.Println("error sending file,", err)
+			return
+		}
+	}
 }
