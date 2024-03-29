@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
@@ -38,17 +40,23 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == "bhej" {
-		file, err := os.Open("kali-linux.png")
-		if err != nil {
-			fmt.Println("error opening file,", err)
-			return
-		}
-		defer file.Close()
+		files := []string{"kali-linux.png", "parac.png", "Z.png"}
 
-		_, err = s.ChannelFileSend(m.ChannelID, "kali-linux.png", file)
-		if err != nil {
-			fmt.Println("error sending file,", err)
-			return
+		for _, fileName := range files {
+			file, err := os.Open(fileName)
+			if err != nil {
+				fmt.Println("error opening file,", err)
+				continue
+			}
+
+			_, err = s.ChannelFileSend(m.ChannelID, fileName, file)
+			file.Close()
+			if err != nil {
+				fmt.Println("error sending file,", err)
+				continue
+			}
+
+			time.Sleep(30 * time.Second)
 		}
 	}
 }
